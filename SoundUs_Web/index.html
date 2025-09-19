@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SoundUs-音乐共创社区</title>
+    <!-- 网站标签上的小图标 -->
+    <link rel="icon" href="docs/design/favicon.ico" type="image/x-icon" />
+    <!-- 设置网站字体、背景颜色 -->
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #000000;
+      }
+    </style>
+    <script>
+      function getUserLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            function (position) {
+              const lat = position.coords.latitude;
+              const lng = position.coords.longitude;
+              // 使用逆地理编码获取地址信息
+              reverseGeocode(lat, lng);
+            },
+            function (error) {
+              updateLocationDisplay("定位失败");
+            }
+          );
+        } else {
+          updateLocationDisplay("不支持定位");
+        }
+      }
+
+      async function reverseGeocode(lat, lng) {
+        try {
+          // 这里可以使用第三方地理编码服务，例如高德地图、百度地图API
+          // 由于需要API密钥，这里先模拟一个示例
+          const mockLocation = "北京·北京市"; // 模拟数据
+          updateLocationDisplay(mockLocation);
+
+          // 实际使用时可以调用如下API（需要替换为真实的API密钥）：
+          // const response = await fetch(`https://api.map.baidu.com/reverse_geocoding/v3/?ak=YOUR_API_KEY&output=json&coordtype=wgs84ll&location=${lat},${lng}`);
+          // const data = await response.json();
+          // if (data.status === 0) {
+          //   const province = data.result.addressComponent.province;
+          //   const city = data.result.addressComponent.city;
+          //   updateLocationDisplay(`${province}·${city}`);
+          // } else {
+          //   updateLocationDisplay('获取位置失败');
+          // }
+        } catch (error) {
+          updateLocationDisplay("获取位置失败");
+        }
+      }
+
+      function updateLocationDisplay(text) {
+        const locationElement = document.querySelector(
+          '[onclick="getUserLocation()"]'
+        );
+        if (locationElement) {
+          locationElement.textContent = text;
+          // 不再自动恢复，保持显示位置信息
+        }
+      }
+
+      let hideTimeout = null;
+
+      function toggleProductMenu(element) {
+        const menu = document.getElementById("productMenu");
+        const isVisible = menu.style.display === "block";
+
+        if (isVisible) {
+          hideMenu(element);
+        } else {
+          showMenu(element);
+        }
+      }
+
+      function showMenu(element) {
+        const menu = document.getElementById("productMenu");
+        menu.style.display = "block";
+        element.classList.add("active");
+        element.src = "docs/design/ioc/333311.png";
+        clearHideTimeout();
+      }
+
+      function hideMenu(element) {
+        const menu = document.getElementById("productMenu");
+        menu.style.display = "none";
+        if (element) {
+          element.classList.remove("active");
+          element.src = "docs/design/ioc/433311.png";
+        }
+        clearHideTimeout();
+      }
+
+      function clearHideTimeout() {
+        if (hideTimeout) {
+          clearTimeout(hideTimeout);
+          hideTimeout = null;
+        }
+      }
+
+      let menuVisible = false;
+
+      function toggleProductMenu(element) {
+        const menu = document.getElementById("productMenu");
+        const isVisible = menu.style.display === "block";
+
+        if (isVisible) {
+          hideMenu(element);
+        } else {
+          showMenu(element);
+        }
+      }
+
+      function showMenu(element) {
+        const menu = document.getElementById("productMenu");
+        menu.style.display = "block";
+        menuVisible = true;
+        element.classList.add("active");
+        element.src = "docs/design/ioc/333311.png";
+        clearHideTimeout();
+
+        // 添加全局点击监听
+        document.addEventListener("click", handleGlobalClick);
+      }
+
+      function hideMenu(element) {
+        const menu = document.getElementById("productMenu");
+        menu.style.display = "none";
+        menuVisible = false;
+        if (element) {
+          element.classList.remove("active");
+          element.src = "docs/design/ioc/433311.png";
+        }
+        clearHideTimeout();
+
+        // 移除全局点击监听
+        document.removeEventListener("click", handleGlobalClick);
+      }
+
+      function handleGlobalClick(event) {
+        const menu = document.getElementById("productMenu");
+        const icon = document.getElementById("productIcon");
+
+        // 如果点击的不是菜单区域且不是图标
+        if (!menu.contains(event.target) && event.target !== icon) {
+          hideMenu(icon);
+        }
+      }
+    </script>
+  </head>
+
+  <body>
+    <!-- 网站顶部导航栏 -->
+    <div
+      style="
+        display: block;
+        display: flex;
+        flex-direction: row;
+        height: 80px;
+        width: 1920px;
+        background-color: #000000;
+        position: fixed;
+        top: 0;
+        left: 0;
+        border-bottom: 0.5px solid #3f3f3f;
+        z-index: 1000;
+      "
+    >
+      <!-- 网站LOGO -->
+      <div
+        style="
+          display: flex;
+          align-items: center;
+          height: 100%;
+          margin-left: 20px;
+        "
+      >
+        <img
+          src="docs/design/LOGO.png"
+          style="width: 118px; height: 32px; cursor: pointer"
+          onclick="window.location.href = '/'"
+        />
+      </div>
+
+      <!-- 用户位置信息 -->
+      <div
+        style="
+          display: flex;
+          align-items: center;
+          height: 100%;
+          margin-left: 40px;
+        "
+      >
+        <div
+          style="
+            width: 90px;
+            height: 30px;
+            border: 0.25px solid #808080;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 12px;
+            cursor: pointer;
+          "
+          onclick="getUserLocation()"
+        >
+          获取位置
+        </div>
+      </div>
+      <!-- 产品图标 -->
+      <div
+        style="
+          display: flex;
+          align-items: center;
+          height: 100%;
+          margin-left: 20px;
+        "
+      >
+        <img
+          id="productIcon"
+          src="docs/design/ioc/433311.png"
+          style="
+            width: 33px;
+            height: 33px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+          "
+          onmouseover="this.src='docs/design/ioc/333311.png'"
+          onmouseout="if(!this.classList.contains('active')) this.src='docs/design/ioc/433311.png'"
+          onclick="toggleProductMenu(this)"
+        />
+
+        <!-- 次级菜单 -->
+        <div
+          id="productMenu"
+          style="
+            display: none;
+            position: fixed;
+            top: 85px;
+            left: 300px;
+            width: 970px;
+            height: 680px;
+            background-color: rgba(25, 27, 30, 0.95);
+            border: 0.25px solid #3f3f3f;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+          "
+        >
+          <!-- 菜单内容 -->
+          <div style="padding: 10px; color: #b4b4b4">菜单内容</div>
+        </div>
+      </div>
+      <!-- 标题菜单“灵感集市” -->
+      <div
+        style="
+          display: flex;
+          align-items: center;
+          height: 100%;
+          margin-left: 70px;
+        "
+      >
+        <div
+          id="inspirationMarket"
+          style="
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #ffffff;
+          "
+          onmouseover="this.style.backgroundColor='#ffffff'; this.style.color='#000000'; this.querySelector('img').style.filter='invert(0)'"
+          onmouseout="this.style.backgroundColor='transparent'; this.style.color='#ffffff'; this.querySelector('img').style.filter='invert(1)'"
+          onclick="this.style.backgroundColor='#ffffff'; this.style.color='#000000'; this.querySelector('img').style.filter='invert(0)'"
+        >
+          <img
+            src="docs/design/ioc/933311.png"
+            style="
+              width: 11.5px;
+              height: 14.2px;
+              margin-right: 8px;
+              filter: invert(1);
+              transition: filter 0.3s ease;
+            "
+          />
+          <span style="font-weight: 500">灵感集市</span>
+        </div>
+         <!-- 标题菜单“创作工坊” -->
+      <div
+        style="
+          display: flex;
+          align-items: center;
+          height: 100%;
+          margin-left: 70px;
+        "
+      >
+        <div
+          id="inspirationMarket"
+          style="
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #ffffff;
+          "
+          onmouseover="this.style.backgroundColor='#ffffff'; this.style.color='#000000'; this.querySelector('img').style.filter='invert(0)'"
+          onmouseout="this.style.backgroundColor='transparent'; this.style.color='#ffffff'; this.querySelector('img').style.filter='invert(1)'"
+          onclick="this.style.backgroundColor='#ffffff'; this.style.color='#000000'; this.querySelector('img').style.filter='invert(0)'"
+        >
+          <img
+            src="docs/design/ioc/533311.png"
+            style="
+              width: 14px;
+              height: 14px;
+              margin-right: 8px;
+              filter: invert(0);
+              transition: filter 0.3s ease;
+            "
+          />
+          <span style="font-weight: 500">创作工坊</span>
+        </div>
+      </div>
+    </div>
+
+    <div
+      style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        flex-direction: column;
+      "
+    >
+      <h1 style="color: #ffffff">SoundUs-音乐共创社区</h1>
+      <p style="color: #ffffff">欢迎来到SoundUs！</p>
+      <p style="color: #ffffff">我们正在建设中，敬请期待！</p>
+    </div>
+  </body>
+</html>
